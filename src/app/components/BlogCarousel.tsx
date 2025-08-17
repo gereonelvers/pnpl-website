@@ -87,19 +87,19 @@ export default function BlogCarousel({ posts }: BlogCarouselProps) {
           <div className="w-16 md:w-24 h-1 bg-black mx-auto mt-6 md:mt-8"></div>
         </div>
 
-        <div className="relative">
+        <div className="relative pb-8">
           {/* Main carousel */}
-          <div className="overflow-hidden">
+          <div className="overflow-x-hidden overflow-y-visible">
             <div 
-              className="flex transition-transform duration-700 ease-in-out"
+              className="flex transition-transform duration-700 ease-in-out py-4"
               style={{ transform: `translateX(-${currentSlideIndex * (isMobile ? 100 : 50)}%)` }}
             >
               {/* Create enough slides for endless scrolling */}
               {Array.from({ length: posts.length * 3 }, (_, slideIndex) => {
                 const post = posts[slideIndex % posts.length];
                 return (
-                  <div key={slideIndex} className="w-full md:w-1/2 flex-shrink-0 px-2 md:px-4">
-                    <article className="bg-white rounded-2xl border border-gray-200 overflow-hidden group hover:shadow-2xl transition-all duration-500 hover:border-black" style={{transformOrigin: 'center'}}>
+                  <div key={slideIndex} className="w-full md:w-1/2 flex-shrink-0 px-2 md:px-4 py-4">
+                    <article className="bg-white rounded-2xl border border-gray-200 overflow-hidden group hover:shadow-lg transition-all duration-500 hover:border-black" style={{transformOrigin: 'center'}}>
                       <div className="p-6 md:p-8">
                         {/* Tags */}
                         <div className="flex flex-wrap gap-2 mb-4">
@@ -190,8 +190,8 @@ export default function BlogCarousel({ posts }: BlogCarouselProps) {
                     onClick={() => goToSlide(index)}
                     className={`relative transition-all duration-300 overflow-hidden ${
                       isActive
-                        ? 'w-8 h-0.5 bg-gray-200 rounded-full'
-                        : 'w-2 h-2 bg-gray-300 hover:bg-gray-400 rounded-full'
+                        ? 'w-8 h-1 bg-gray-200 rounded-full'
+                        : 'w-1 h-1 bg-gray-300 hover:bg-gray-400 rounded-full'
                     }`}
                     aria-label={`Go to post ${index + 1}`}
                   >
