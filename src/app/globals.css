@@ -24,3 +24,524 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Enhanced Typography */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hero button styles with enhanced effects */
+.hero-button-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-button-primary:hover {
+  background: #000 !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hero-button-secondary:hover {
+  border-color: #000 !important;
+  color: #000 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Publications enhanced hover effects */
+.publication-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.publication-card:hover {
+  border-color: #000 !important;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+.publication-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.publication-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+.publication-link:hover::before {
+  left: 0;
+}
+
+.publication-link:hover {
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+/* Team member card enhanced hover effects */
+.team-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.team-card:hover {
+  border-color: #000 !important;
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15) !important;
+}
+
+.team-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.team-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+.team-link:hover::before {
+  left: 0;
+}
+
+.team-link:hover {
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+/* Navigation enhanced hover effects */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  background: #000;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover {
+  color: #000 !important;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+.nav-button:hover::before {
+  left: 0;
+}
+
+.nav-button:hover {
+  color: #fff !important;
+}
+
+/* Footer link enhanced hover effects */
+.footer-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+.footer-link:hover::before {
+  left: 0;
+}
+
+.footer-link:hover {
+  color: #000 !important;
+}
+
+/* Sophisticated scroll animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle background patterns */
+.publication-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.publication-card:hover::before {
+  opacity: 1;
+}
+
+/* Enhanced selection styles */
+::selection {
+  background: #000;
+  color: #fff;
+}
+
+::-moz-selection {
+  background: #000;
+  color: #fff;
+}
+
+/* Blog Content Styles */
+.blog-content {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4,
+.blog-content h5,
+.blog-content h6 {
+  margin: 2rem 0 1rem 0;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #0a0a0a;
+  word-wrap: break-word;
+}
+
+.blog-content h1 { font-size: 32px; }
+.blog-content h2 { font-size: 28px; }
+.blog-content h3 { font-size: 24px; }
+.blog-content h4 { font-size: 20px; }
+
+.blog-content p {
+  margin: 1.5rem 0;
+  color: #333;
+  word-wrap: break-word;
+}
+
+.blog-content ul,
+.blog-content ol {
+  margin: 1.5rem 0;
+  padding-left: 2rem;
+  word-wrap: break-word;
+}
+
+.blog-content li {
+  margin: 0.5rem 0;
+  color: #333;
+  word-wrap: break-word;
+}
+
+.blog-content blockquote {
+  margin: 2rem 0;
+  padding: 1rem 2rem;
+  border-left: 4px solid #0a0a0a;
+  background: #f9f9f9;
+  font-style: italic;
+  color: #555;
+  word-wrap: break-word;
+}
+
+.blog-content code {
+  background: #f1f1f1;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: var(--font-geist-mono);
+  font-size: 14px;
+  color: #0a0a0a;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.blog-content pre {
+  background: #0a0a0a;
+  color: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 2rem 0;
+  max-width: 100%;
+}
+
+.blog-content pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
+}
+
+.blog-content th,
+.blog-content td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.blog-content th {
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+.blog-content .katex {
+  font-size: 1.1em;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.blog-content .katex-display {
+  margin: 2rem 0;
+  text-align: center;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.blog-content a {
+  color: #0a0a0a;
+  text-decoration: underline;
+  word-wrap: break-word;
+}
+
+.blog-content a:hover {
+  color: #555;
+}
+
+/* Math styling */
+.math-display {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.math-inline {
+  margin: 0 0.2rem;
+}
+
+/* Ensure KaTeX styles work properly */
+.katex-display {
+  margin: 1.5rem 0 !important;
+}
+
+/* Table of Contents responsive */
+@media (max-width: 1500px) {
+  .toc-container {
+    display: none !important;
+  }
+  
+  .blog-article {
+    margin-right: auto !important;
+    max-width: 800px !important;
+  }
+}
+
+/* Better content width management */
+.blog-article {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Mobile responsive utilities */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+  
+  .mobile-only {
+    display: inline !important;
+  }
+  
+  .ascii-background {
+    left: 0 !important;
+  }
+  
+  .hero-content .buttons-container {
+    flex-direction: column !important;
+  }
+  
+  .hero-content .logos-container {
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .team-masonry {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2rem !important;
+  }
+  
+  .team-card {
+    position: static !important;
+    width: 100% !important;
+    left: auto !important;
+    top: auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content .buttons-container {
+    flex-direction: column !important;
+  }
+  
+  .team-card-content {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+  
+  .team-card-image {
+    align-self: center !important;
+  }
+  
+  /* Additional mobile optimizations */
+  body {
+    font-size: 14px !important;
+  }
+  
+  .publication-card,
+  .team-card {
+    border-radius: 8px !important;
+  }
+  
+  /* Ensure text doesn't overflow */
+  h1, h2, h3, h4, h5, h6 {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  
+  /* Mobile navigation adjustments */
+  nav {
+    backdrop-filter: blur(20px) !important;
+  }
+}
+
+/* General mobile improvements */
+@media (max-width: 768px) {
+  /* Ensure images scale properly */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Prevent horizontal scroll */
+  html, body {
+    overflow-x: hidden !important;
+  }
+  
+  /* Better touch targets */
+  button, a {
+    min-height: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+/* Ensure all content elements stay within bounds */
+.blog-content * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Special handling for wide elements */
+.blog-content pre,
+.blog-content table,
+.blog-content .katex-display {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Responsive table wrapper */
+.blog-content table {
+  display: table;
+  white-space: normal;
+}
+
+@media (max-width: 800px) {
+  .blog-content table {
+    font-size: 14px;
+  }
+  
+  .blog-content pre {
+    font-size: 12px;
+    padding: 1rem;
+  }
+  
+  .blog-content code {
+    font-size: 12px;
+  }
+}

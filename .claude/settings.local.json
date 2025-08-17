@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:scholar.google.com)",
+      "Bash(npm run build:*)",
+      "WebFetch(domain:neural-processing-lab.github.io)"
+    ],
+    "defaultMode": "acceptEdits"
+  }
+}

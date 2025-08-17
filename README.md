@@ -1,36 +1,142 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PNPL Website
 
-## Getting Started
+The official website for the Parker Jones Neural Processing Lab at Oxford Robotics Institute.
 
-First, run the development server:
+## Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **3D Graphics**: Three.js with React Three Fiber
+- **Typography**: Geist font family
+- **Markdown**: KaTeX for mathematical expressions
+- **Deployment**: Static export ready
+
+## Key Features
+
+### Interactive 3D Hero Section
+- ASCII-rendered 3D brain model using Three.js
+- Real-time rotation and custom character mapping
+- Responsive design with dynamic scaling
+
+### Dynamic Content
+- Real publication data from Google Scholar
+- Expandable abstracts with formatted content
+- Responsive table of contents for blog posts
+- Mathematical expression rendering with KaTeX
+
+### Blog System
+- Markdown-based blog posts with frontmatter
+- Citation management with BibTeX export
+- Tag-based filtering
+- Responsive design with TOC that hides near footer
+
+### Navigation
+- Context-aware navigation (scrolling vs. page navigation)
+- Fixed header with blur effects
+- Smooth scrolling between sections
+
+### Performance Optimizations
+- Static generation with `export` command
+- Image optimization with Next.js Image component
+- Font optimization with `next/font`
+- Component-level code splitting
+
+## Development
+
+### Prerequisites
+- Node.js 18+
+- npm, yarn, pnpm, or bun
+
+### Getting Started
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+
+# Export static site
+npm run export
+
+# Serve production build locally
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+├── app/
+│   ├── components/          # Reusable UI components
+│   │   ├── Navigation.tsx   # Context-aware navigation
+│   │   ├── HeroAscii3D.tsx  # 3D ASCII brain animation
+│   │   ├── Publications.tsx # Research publications
+│   │   ├── Team.tsx         # Team member grid
+│   │   ├── Footer.tsx       # Site footer with logos
+│   │   └── ...
+│   ├── blog/               # Blog pages and components
+│   └── globals.css         # Global styles and CSS utilities
+├── lib/                    # Utility functions
+├── types/                  # TypeScript type definitions
+└── content/               # Blog posts and content
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Content Management
 
-## Learn More
+#### Adding Publications
+Edit `src/app/components/Publications.tsx` and add entries to the `publications` array:
 
-To learn more about Next.js, take a look at the following resources:
+```typescript
+{
+  title: "Paper Title",
+  authors: ["Author 1", "Author 2"],
+  venue: "Conference/Journal",
+  year: 2025,
+  arxiv: "2XXX.XXXXX", // Optional
+  doi: "10.1000/...",  // Optional
+  description: "Brief description",
+  abstract: "Full abstract text",
+  featured: true // Optional
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Adding Blog Posts
+1. Create markdown files in `content/` directory
+2. Include frontmatter with metadata
+3. Use KaTeX syntax for mathematical expressions
+4. Blog posts auto-generate table of contents from headings
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Styling Guidelines
 
-## Deploy on Vercel
+- Uses CSS-in-JS with inline styles for component-scoped styling
+- Global styles in `globals.css` for reusable patterns
+- Responsive design with `clamp()` and media queries
+- Dark/light theme support via CSS custom properties
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The site is configured for static export:
+
+```bash
+npm run build && npm run export
+```
+
+This generates a `out/` directory that can be deployed to any static hosting service (GitHub Pages, Netlify, Vercel, etc.).
+
+### Performance Notes
+
+- All components use Next.js optimization features
+- Images are optimized with `next/image`
+- Fonts are self-hosted and optimized
+- 3D models are compressed (.glb format)
+- Static generation eliminates runtime overhead
+
+## Browser Support
+
+- Modern browsers with ES2020+ support
+- WebGL support required for 3D features
+- Responsive design supports mobile and desktop
