@@ -78,9 +78,11 @@ function SpinningRig({
   }, [tilt]);
 
   useFrame((_, dt) => {
-    const rps = (rotationRPM * Math.PI * 2) / 60;
-    const q = new THREE.Quaternion().setFromAxisAngle(axis, rps * dt);
-    ref.current.quaternion.multiplyQuaternions(q, ref.current.quaternion);
+    if (rotationRPM > 0) {
+      const rps = (rotationRPM * Math.PI * 2) / 60;
+      const q = new THREE.Quaternion().setFromAxisAngle(axis, rps * dt);
+      ref.current.quaternion.multiplyQuaternions(q, ref.current.quaternion);
+    }
   });
 
   return <group ref={ref}>{children}</group>;
@@ -96,6 +98,17 @@ export default function HeroAscii3D({
   fit = 3.2, // <— default bigger than before (was ~1.8)
 }: HeroAscii3DProps) {
   const [isModelLoaded, setIsModelLoaded] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+  
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   return (
     <div
       style={{
@@ -105,55 +118,87 @@ export default function HeroAscii3D({
         overflow: 'hidden',
       }}
     >
-      {/* Background: ASCII-rendered 3D positioned slightly right */}
+      {/* Placeholder image - Shows on all devices */}
       <div 
         style={{ 
           position: 'absolute',
           top: 0,
-          left: '20%',
+          left: isMobile ? '0' : '20%',
           right: 0,
           bottom: 0,
           minHeight: '100vh',
           zIndex: 1,
-          opacity: isModelLoaded ? 1 : 0,
-          transition: 'opacity 0.5s ease-in-out',
+          opacity: (!isMobile && isModelLoaded) ? 0 : 1,
+          transition: 'opacity 0.8s ease-in-out',
+          pointerEvents: 'none',
         }}
         className="ascii-background"
       >
-        <Canvas
-          gl={{ antialias: true, alpha: true }}
-          camera={{ position: [0, 0, 2.6], fov: 25, near: 0.01, far: 100 }}
-          dpr={[1, 2]}
-        >
-          <ambientLight intensity={0.2} />
-          <directionalLight position={[2, 3, 4]} intensity={1.6} />
-          <directionalLight position={[-3, -2, 1]} intensity={0.5} />
-          <Environment preset="studio" />
-
-          <SpinningRig rotationRPM={rotationRPM} tilt={tilt}>
-            <Suspense fallback={<FallbackMesh />}>
-              <LoadedModel url={modelUrl} fit={fit} onLoad={() => setIsModelLoaded(true)} />
-            </Suspense>
-          </SpinningRig>
-
-          <AsciiRenderer characters={characters} invert={invert} resolution={0.18} />
-        </Canvas>
-
-        {/* Keep ASCII huge, crisp, monospaced */}
-        <style>{`
-          canvas + pre, canvas + div {
-            position: absolute !important;
-            inset: 0 !important;
-            pointer-events: none;
-            background: transparent !important;
-            color: currentColor !important;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
-            font-size: ${fontSize}px !important;
-            line-height: 1em !important;
-            letter-spacing: 0.03em !important;
-          }
-        `}</style>
+        <Image
+          src="/3d-placeholder.png"
+          alt="3D Brain Model"
+          fill
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center',
+            filter: 'brightness(1.1) contrast(1.2)',
+            opacity: 0.9
+          }}
+          priority
+        />
       </div>
+      
+      {/* Actual 3D Canvas - Only on desktop */}
+      {!isMobile && (
+        <div 
+          style={{ 
+            position: 'absolute',
+            top: 0,
+            left: '20%',
+            right: 0,
+            bottom: 0,
+            minHeight: '100vh',
+            zIndex: 2,
+            opacity: isModelLoaded ? 1 : 0,
+            transition: 'opacity 0.8s ease-in-out',
+          }}
+          className="ascii-background"
+        >
+          <Canvas
+            gl={{ antialias: true, alpha: true }}
+            camera={{ position: [0, 0, 2.6], fov: 25, near: 0.01, far: 100 }}
+            dpr={[1, 2]}
+          >
+            <ambientLight intensity={0.2} />
+            <directionalLight position={[2, 3, 4]} intensity={1.6} />
+            <directionalLight position={[-3, -2, 1]} intensity={0.5} />
+            <Environment preset="studio" />
+
+            <SpinningRig rotationRPM={rotationRPM} tilt={tilt}>
+              <Suspense fallback={<FallbackMesh />}>
+                <LoadedModel url={modelUrl} fit={fit} onLoad={() => setIsModelLoaded(true)} />
+              </Suspense>
+            </SpinningRig>
+
+            <AsciiRenderer characters={characters} invert={invert} resolution={0.18} />
+          </Canvas>
+
+          {/* Keep ASCII huge, crisp, monospaced */}
+          <style>{`
+            canvas + pre, canvas + div {
+              position: absolute !important;
+              inset: 0 !important;
+              pointer-events: none;
+              background: transparent !important;
+              color: currentColor !important;
+              font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+              font-size: ${fontSize}px !important;
+              line-height: 1em !important;
+              letter-spacing: 0.03em !important;
+            }
+          `}</style>
+        </div>
+      )}
 
       {/* Foreground: minimalist copy left-aligned with enhanced readability */}
       <div 
@@ -291,4 +336,7 @@ export default function HeroAscii3D({
   );
 }
 
-useGLTF.preload('/model.glb');
+// Only preload model on desktop
+if (typeof window !== 'undefined' && window.innerWidth > 768) {
+  useGLTF.preload('/model.glb');
+}

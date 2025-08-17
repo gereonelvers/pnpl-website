@@ -93,7 +93,7 @@ export default function Team() {
 
   useEffect(() => {
     const layoutMasonry = () => {
-      if (containerRef.current) {
+      if (containerRef.current && window.innerWidth > 768) {
         const items = Array.from(containerRef.current.children) as HTMLElement[];
         const gap = 48; // 3rem
         const containerWidth = containerRef.current.offsetWidth;
@@ -118,6 +118,16 @@ export default function Team() {
         });
         
         containerRef.current.style.height = `${Math.max(leftHeight, rightHeight)}px`;
+      } else if (containerRef.current) {
+        // Reset styles for mobile
+        const items = Array.from(containerRef.current.children) as HTMLElement[];
+        items.forEach((item) => {
+          item.style.position = 'static';
+          item.style.width = '100%';
+          item.style.left = 'auto';
+          item.style.top = 'auto';
+        });
+        containerRef.current.style.height = 'auto';
       }
     };
 
