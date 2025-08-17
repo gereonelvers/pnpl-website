@@ -28,7 +28,17 @@ function extractTocFromContent(content: string): TocItem[] {
 
   while ((match = headingRegex.exec(content)) !== null) {
     const level = match[1].length;
-    const text = match[2].trim();
+    let text = match[2].trim();
+    
+    // Strip markdown formatting from text
+    text = text
+      .replace(/\*\*(.*?)\*\*/g, '$1')  // Remove bold formatting **text**
+      .replace(/\*(.*?)\*/g, '$1')     // Remove italic formatting *text*
+      .replace(/`(.*?)`/g, '$1')       // Remove inline code formatting `text`
+      .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Remove link formatting [text](url)
+      .replace(/~~(.*?)~~/g, '$1')     // Remove strikethrough formatting ~~text~~
+      .trim();
+    
     const id = text.toLowerCase()
       .replace(/[^\w\s-]/g, '') // Remove special characters except spaces and hyphens
       .replace(/\s+/g, '-')     // Replace spaces with hyphens
@@ -46,8 +56,30 @@ function addHeadingIds(htmlContent: string, tocItems: TocItem[]): string {
   
   tocItems.forEach(item => {
     const headingTag = `h${item.level}`;
-    const regex = new RegExp(`<${headingTag}>([^<]*${item.text}[^<]*)</${headingTag}>`, 'i');
-    updatedContent = updatedContent.replace(regex, `<${headingTag} id="${item.id}">$1</${headingTag}>`);
+    
+    // Find all headings of the same level
+    const headingRegex = new RegExp(`<${headingTag}[^>]*?>(.*?)</${headingTag}>`, 'gi');
+    let match;
+    
+    while ((match = headingRegex.exec(htmlContent)) !== null) {
+      const fullMatch = match[0];
+      const innerContent = match[1];
+      const textContent = innerContent.replace(/<[^>]*>/g, '').trim();
+      
+      // Check if this heading matches our TOC item (case-insensitive)
+      if (textContent.toLowerCase() === item.text.toLowerCase()) {
+        // Only replace if it doesn't already have an id
+        if (!fullMatch.includes('id=')) {
+          const replacement = `<${headingTag} id="${item.id}">${innerContent}</${headingTag}>`;
+          updatedContent = updatedContent.replace(fullMatch, replacement);
+          console.log(`Added ID "${item.id}" to heading: "${textContent}"`);
+        }
+        break;
+      }
+    }
+    
+    // Reset regex for next item
+    headingRegex.lastIndex = 0;
   });
   
   return updatedContent;
@@ -70,9 +102,9 @@ export async function getAllPosts(): Promise<BlogPost[]> {
         })
     );
 
-    // Sort posts by date
+    // Sort posts by date and filter out drafts
     return allPostsData
-      .filter((post): post is BlogPost => post !== null)
+      .filter((post): post is BlogPost => post !== null && !post.draft)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
     console.error('Error in getAllPosts:', error);
@@ -128,7 +160,9 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
       tags: metadata.tags || [],
       readingTime,
       citations: metadata.citations,
+      selfCitation: metadata.selfCitation,
       toc: tocItems,
+      draft: metadata.draft || false,
     };
   } catch (error) {
     console.error('Error processing post slug:', slug, error);
@@ -141,31 +175,16 @@ export async function getPostsByTag(tag: string): Promise<BlogPost[]> {
   return allPosts.filter((post) => post.tags.includes(tag));
 }
 
-export function getAllTags(): string[] {
+export async function getAllTags(): Promise<string[]> {
   try {
-    if (!fs.existsSync(postsDirectory)) {
-      return [];
-    }
-    
-    const fileNames = fs.readdirSync(postsDirectory);
+    const posts = await getAllPosts();
     const allTags = new Set<string>();
     
-    fileNames
-      .filter((fileName) => fileName.endsWith('.md'))
-      .forEach((fileName) => {
-        try {
-          const fullPath = path.join(postsDirectory, fileName);
-          const fileContents = fs.readFileSync(fullPath, 'utf8');
-          const { data } = matter(fileContents);
-          const metadata = data as BlogMetadata;
-          
-          if (metadata.tags && Array.isArray(metadata.tags)) {
-            metadata.tags.forEach((tag) => allTags.add(tag));
-          }
-        } catch (fileError) {
-          console.warn(`Error reading file ${fileName}:`, fileError);
-        }
-      });
+    posts.forEach((post) => {
+      if (post.tags && Array.isArray(post.tags)) {
+        post.tags.forEach((tag) => allTags.add(tag));
+      }
+    });
     
     return Array.from(allTags).sort();
   } catch (error) {

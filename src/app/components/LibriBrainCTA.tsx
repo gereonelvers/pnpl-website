@@ -2,7 +2,7 @@
 
 export default function LibriBrainCTA() {
   return (
-    <section style={{
+    <section data-dark-section style={{
       padding: 'clamp(3rem, 8vw, 5rem) clamp(1rem, 4vw, 2rem)',
       // background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)',
       background: 'linear-gradient(135deg,rgb(58, 58, 58) 0%,rgb(39, 5, 70) 100%)',
@@ -10,14 +10,26 @@ export default function LibriBrainCTA() {
       position: 'relative',
       overflow: 'hidden'
     }}>
-      {/* Subtle background pattern */}
+      {/* Dotted texture pattern */}
       <div style={{
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        background: 'radial-gradient(circle at 30% 70%, rgba(255,255,255,0.03) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(255,255,255,0.03) 0%, transparent 50%)',
+        backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)',
+        backgroundSize: '20px 20px',
+        pointerEvents: 'none'
+      }} />
+      
+      {/* Additional subtle overlay */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'radial-gradient(circle at 30% 70%, rgba(255,255,255,0.02) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(255,255,255,0.02) 0%, transparent 50%)',
         pointerEvents: 'none'
       }} />
       

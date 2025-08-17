@@ -3,7 +3,8 @@ title: "Breaking the Neural Code: Advanced Signal Processing for Inner Speech De
 excerpt: "Exploring cutting-edge techniques in neural signal processing that bring us closer to seamless brain-computer interfaces. This post showcases our latest research findings and demonstrates the power of modern computational methods in neuroscience."
 author: "Dr. Parker Jones"
 date: "2024-01-15"
-tags: ["neural-processing", "brain-computer-interface", "signal-processing", "machine-learning", "research"]
+draft: true
+tags: ["Neural Processing", "Brain-Computer Interface", "Signal Processing", "Machine Learning", "Research"]
 citations:
   - id: "hochreiter1997lstm"
     title: "Long Short-Term Memory"

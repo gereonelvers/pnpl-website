@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { getPostBySlug } from '@/lib/blog';
 import Navigation from '../../components/Navigation';
 import Citations from '../../components/Citations';
+import BlogPostCitation from '../../components/BlogPostCitation';
 import BlogDemo from '../../components/BlogDemo';
 import TableOfContents from '../../components/TableOfContents';
 import MathRenderer from '../../components/MathRenderer';
@@ -53,7 +54,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             borderBottom: '2px solid #f0f0f0'
           }}>
             <h1 style={{
-              fontSize: '56px',
+              fontSize: 'clamp(24px, 6vw, 56px)',
               fontWeight: 200,
               marginBottom: '1.5rem',
               letterSpacing: '-0.03em',
@@ -89,33 +90,32 @@ export default async function BlogPostPage({ params }: PageProps) {
           }}>
             <div style={{
               display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
+              flexDirection: 'column',
+              gap: '0.5rem',
               fontSize: '14px',
               color: '#666'
             }}>
-              <span>{format(new Date(post.date), 'MMMM dd, yyyy')}</span>
-              <span>•</span>
-              <span>{post.readingTime} min read</span>
-              <span>•</span>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem'
+              }}>
+                <span>{(() => {
+                  try {
+                    const date = new Date(post.date);
+                    if (isNaN(date.getTime())) {
+                      return post.date; // fallback to original string
+                    }
+                    return format(date, 'MMMM dd, yyyy');
+                  } catch (error) {
+                    return post.date; // fallback to original string
+                  }
+                })()}</span>
+                <span>•</span>
+                <span>{post.readingTime} min read</span>
+              </div>
               <span>By {post.author}</span>
             </div>
-            
-            <Link
-              href="/blog"
-              style={{
-                color: '#0a0a0a',
-                textDecoration: 'none',
-                fontSize: '14px',
-                fontWeight: 500,
-                border: '1px solid #ddd',
-                padding: '0.5rem 1rem',
-                borderRadius: '6px',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              ← Back to Blog
-            </Link>
           </div>
 
           {/* Tags */}
@@ -169,35 +169,16 @@ export default async function BlogPostPage({ params }: PageProps) {
             </div>
           </MathRenderer>
 
+          {/* Self Citation */}
+          {post.selfCitation && (
+            <BlogPostCitation bibtex={post.selfCitation} />
+          )}
+
           {/* Citations */}
           {post.citations && post.citations.length > 0 && (
             <Citations citations={post.citations} />
           )}
 
-          {/* Navigation */}
-          <div style={{
-            marginTop: '4rem',
-            paddingTop: '2rem',
-            borderTop: '1px solid #eee',
-            textAlign: 'center'
-          }}>
-            <Link
-              href="/blog"
-              style={{
-                display: 'inline-block',
-                background: '#0a0a0a',
-                color: '#fff',
-                padding: '1rem 2rem',
-                borderRadius: '8px',
-                textDecoration: 'none',
-                fontSize: '16px',
-                fontWeight: 500,
-                transition: 'all 0.2s ease'
-              }}
-            >
-              Read More Posts
-            </Link>
-          </div>
         </article>
       </main>
       <Footer />

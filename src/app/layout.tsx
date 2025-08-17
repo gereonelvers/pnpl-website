@@ -16,9 +16,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "PNPL | Parker Jones Neural Processing Lab",
   description: "Decoding inner speech from the brain, non-invasively. The Parker Jones Neural Processing Lab at Oxford Robotics Institute.",
-  icons: {
-    icon: '/favicon.png',
-  },
 };
 
 export default function RootLayout({

@@ -9,11 +9,21 @@ interface TableOfContentsProps {
 
 export default function TableOfContents({ items }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>('');
-  const [isVisible, setIsVisible] = useState(true);
+  const [tocPosition, setTocPosition] = useState<'fixed' | 'absolute'>('fixed');
+  const [tocTop, setTocTop] = useState(200);
 
   useEffect(() => {
     const handleScroll = () => {
-      const headings = items.map(item => document.getElementById(item.id)).filter(Boolean);
+      const headings = items.map(item => {
+        const element = document.getElementById(item.id);
+        if (!element) {
+          console.log(`TOC: Could not find element with ID "${item.id}" for heading "${item.text}"`);
+        }
+        return element;
+      }).filter(Boolean);
+      
+      console.log(`TOC: Found ${headings.length} out of ${items.length} heading elements`);
+      
       const scrollPosition = window.scrollY + 100; // Offset for header
 
       for (let i = headings.length - 1; i >= 0; i--) {
@@ -24,19 +34,30 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
         }
       }
 
-      // Check if we should hide TOC near footer
+      // Adjust TOC position to avoid footer overlap
       const footer = document.querySelector('footer');
-      const tocHeight = 400; // Approximate height of TOC
-      const buffer = 50; // Buffer space
-
-      if (footer) {
+      const article = document.querySelector('article');
+      
+      if (footer && article) {
         const footerTop = footer.offsetTop;
-        const currentScroll = window.scrollY;
-        const windowHeight = window.innerHeight;
-        const distanceToFooter = footerTop - (currentScroll + windowHeight);
+        const articleRect = article.getBoundingClientRect();
+        const articleBottom = window.scrollY + articleRect.bottom;
+        const tocHeight = 400; // Approximate TOC height
+        const buffer = 100; // Buffer space
         
-        // Hide TOC when getting close to footer
-        setIsVisible(distanceToFooter > -(tocHeight + buffer));
+        // Check if we need to switch to absolute positioning
+        const spaceFromFooter = footerTop - (window.scrollY + window.innerHeight);
+        const needsAbsolutePosition = spaceFromFooter < tocHeight + buffer;
+        
+        if (needsAbsolutePosition) {
+          setTocPosition('absolute');
+          // Position TOC so it ends before the footer
+          const maxTop = Math.max(200, footerTop - tocHeight - buffer);
+          setTocTop(maxTop);
+        } else {
+          setTocPosition('fixed');
+          setTocTop(200);
+        }
       }
     };
 
@@ -61,11 +82,11 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
 
   return (
     <div style={{
-      position: 'fixed',
-      top: '200px',
+      position: tocPosition,
+      top: `${tocTop}px`,
       right: '2rem',
       width: '280px',
-      maxHeight: 'calc(100vh - 240px)',
+      maxHeight: tocPosition === 'fixed' ? 'calc(100vh - 240px)' : '400px',
       overflowY: 'auto',
       background: '#fff',
       border: '1px solid #eee',
@@ -73,9 +94,7 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
       padding: '1.5rem',
       boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
       zIndex: 10,
-      opacity: isVisible ? 1 : 0,
-      visibility: isVisible ? 'visible' : 'hidden',
-      transition: 'opacity 0.3s ease, visibility 0.3s ease'
+      transition: 'top 0.3s ease'
     }}
     className="toc-container"
     >

@@ -14,7 +14,9 @@ export interface BlogPost {
   tags: string[];
   readingTime: number;
   citations?: Citation[];
+  selfCitation?: string;
   toc?: TocItem[];
+  draft?: boolean;
 }
 
 export interface Citation {
@@ -37,4 +39,6 @@ export interface BlogMetadata {
   date: string;
   tags: string[];
   citations?: Citation[];
+  selfCitation?: string;
+  draft?: boolean;
 }

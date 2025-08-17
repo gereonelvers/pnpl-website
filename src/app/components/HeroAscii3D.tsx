@@ -166,7 +166,7 @@ export default function HeroAscii3D({
         >
           <Canvas
             gl={{ antialias: true, alpha: true }}
-            camera={{ position: [0, 0, 2.6], fov: 25, near: 0.01, far: 100 }}
+            camera={{ position: [0, 0, 2.6], fov: 35, near: 1, far: 100 }}
             dpr={[1, 2]}
           >
             <ambientLight intensity={0.2} />

@@ -21,7 +21,7 @@ const publications: Publication[] = [
     venue: "NeurIPS 2025 Competition Track",
     year: 2025,
     arxiv: "2506.10165",
-    description: "Competition framework for advancing speech decoding from non-invasive brain data using the LibriBrain dataset.",
+    description: "Competition framework for advancing speech decoding from non-invasive brain data using the LibriBrain dataset. Cite this for the LibriBrain competition.",
     abstract: "The advance of speech decoding from non-invasive brain data holds the potential for profound societal impact. Among its most promising applications is the restoration of communication to paralysed individuals affected by speech deficits such as dysarthria, without the need for high-risk surgical interventions. This competition provides a standardized framework for evaluating speech detection and phoneme classification methods using the LibriBrain dataset, fostering collaborative progress in the field.",
     featured: true
   },
@@ -31,7 +31,7 @@ const publications: Publication[] = [
     venue: "arXiv preprint",
     year: 2025,
     arxiv: "2506.02098",
-    description: "The largest single-subject MEG dataset to date for speech decoding, with over 50 hours of recordings.",
+    description: "The largest single-subject MEG dataset to date for speech decoding, with over 50 hours of recordings. Cite this for the LibriBrain dataset.",
     abstract: "LibriBrain represents the largest single-subject MEG dataset to date for speech decoding, with over 50 hours of recordings. The dataset aims to support advances in neural decoding by providing high-quality MEG recordings with detailed annotations. This comprehensive resource enables researchers to develop and test sophisticated speech decoding algorithms at unprecedented scale, potentially accelerating progress in brain-computer interface technologies.",
     featured: true
   },
@@ -139,7 +139,10 @@ export default function Publications() {
                 </div>
               )}
               
-              <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ 
+                marginBottom: '1.5rem',
+                marginTop: pub.featured ? '2.5rem' : '0'
+              }}>
                 <h3 style={{ 
                   fontSize: '24px', 
                   margin: 0,
@@ -227,7 +230,7 @@ export default function Publications() {
                   lineHeight: 1.6,
                   fontWeight: 300
                 }}>
-                  {pub.description}
+                  <span style={{ fontWeight: 600 }}>tl;dr:</span> {pub.description}
                 </p>
               )}
               

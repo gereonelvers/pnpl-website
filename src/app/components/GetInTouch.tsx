@@ -3,12 +3,39 @@ export default function GetInTouch() {
     <section id="get-in-touch" style={{
       padding: 'clamp(4rem, 8vw, 6rem) clamp(1rem, 4vw, 2rem)',
       background: '#f9f9f9',
-      borderTop: '1px solid #eee'
+      borderTop: '1px solid #eee',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
+      {/* Dotted texture pattern */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.08) 1px, transparent 0)',
+        backgroundSize: '20px 20px',
+        pointerEvents: 'none'
+      }} />
+      
+      {/* Additional subtle overlay */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'radial-gradient(circle at 30% 70%, rgba(0,0,0,0.02) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(0,0,0,0.02) 0%, transparent 50%)',
+        pointerEvents: 'none'
+      }} />
+      
       <div style={{
         maxWidth: '1200px',
         margin: '0 auto',
-        textAlign: 'center'
+        textAlign: 'center',
+        position: 'relative',
+        zIndex: 1
       }}>
         <h2 style={{
           fontSize: 'clamp(28px, 6vw, 36px)',

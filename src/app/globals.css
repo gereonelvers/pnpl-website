@@ -31,6 +31,42 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Prevent awkward word breaking and hyphenation */
+* {
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+}
+
+/* Only allow word breaking for specific content where needed */
+.blog-content,
+.long-content {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+}
+
+/* Prevent word breaking in titles, headings, and navigation */
+h1, h2, h3, h4, h5, h6,
+.nav-link,
+.publication-card h3,
+.team-card h3,
+article h2 {
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  hyphens: none !important;
+  -webkit-hyphens: none !important;
+  -moz-hyphens: none !important;
+  -ms-hyphens: none !important;
+  white-space: normal !important;
+}
+
 /* Hero button styles with enhanced effects */
 .hero-button-primary {
   position: relative;
@@ -490,11 +526,14 @@ body {
     border-radius: 8px !important;
   }
   
-  /* Ensure text doesn't overflow */
+  /* Ensure text doesn't overflow but prevent awkward breaking */
   h1, h2, h3, h4, h5, h6 {
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-    hyphens: auto !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+    -webkit-hyphens: none !important;
+    -moz-hyphens: none !important;
+    -ms-hyphens: none !important;
   }
   
   /* Mobile navigation adjustments */
@@ -522,6 +561,35 @@ body {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
+  }
+  
+  /* Add spacing between blog cards on mobile */
+  article {
+    margin-bottom: 2rem !important;
+  }
+  
+  /* Add spacing for publication cards */
+  .publication-card {
+    margin-bottom: 2rem !important;
+  }
+  
+  /* Add spacing for team cards */
+  .team-card {
+    margin-bottom: 2rem !important;
+  }
+  
+  /* Target the specific blog post title class */
+  .blog-post-title {
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Additional nuclear targeting */
+  h2.blog-post-title,
+  article h2.blog-post-title,
+  main article h2.blog-post-title {
+    font-size: 14px !important;
+    line-height: 1.2 !important;
   }
 }
 

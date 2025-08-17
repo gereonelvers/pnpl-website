@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 interface TeamMember {
@@ -90,6 +90,33 @@ const teamMembers: TeamMember[] = [
 
 export default function Team() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [expandedBios, setExpandedBios] = useState<Set<number>>(new Set());
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const toggleBio = (index: number) => {
+    const newExpanded = new Set(expandedBios);
+    if (newExpanded.has(index)) {
+      newExpanded.delete(index);
+    } else {
+      newExpanded.add(index);
+    }
+    setExpandedBios(newExpanded);
+  };
+
+  const truncateBio = (bio: string, maxLength: number = 100) => {
+    if (bio.length <= maxLength) return bio;
+    return bio.substring(0, maxLength).trim() + '...';
+  };
 
   useEffect(() => {
     const layoutMasonry = () => {
@@ -162,7 +189,7 @@ export default function Team() {
               color: '#666',
               fontWeight: 500 
             }}>
-              Meet the group
+              Who we are
             </span>
           </div>
           <h2 style={{ 
@@ -173,7 +200,7 @@ export default function Team() {
             letterSpacing: '-0.03em',
             marginBottom: '1.5rem'
           }}>
-            Team
+            Meet the group
           </h2>
           <p style={{ 
             fontSize: '20px',
@@ -231,40 +258,219 @@ export default function Team() {
                 </div>
               )}
               
-              <div style={{ display: 'flex', gap: '2rem', padding: '2.5rem' }}>
-                {/* Image Section */}
-                {member.image && (
-                  <div style={{
-                    width: '120px',
-                    height: '120px',
-                    background: '#f0f0f0',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    flexShrink: 0,
-                    borderRadius: '8px'
-                  }}>
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      style={{
-                        objectFit: 'cover',
-                        transition: 'transform 0.3s ease, filter 0.3s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                        e.currentTarget.style.filter = 'brightness(1.1)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.filter = 'brightness(1)';
-                      }}
-                    />
+              {/* Mobile Layout */}
+              {isMobile ? (
+                <div style={{ padding: '1.5rem' }}>
+                  {/* Image Section - Square on Top */}
+                  {member.image && (
+                    <div style={{
+                      width: '200px',
+                      height: '200px',
+                      background: '#f0f0f0',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      borderRadius: '8px',
+                      marginBottom: '1.5rem',
+                      margin: '0 auto 1.5rem auto'
+                    }}>
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        style={{
+                          objectFit: 'cover',
+                          objectPosition: 'center',
+                          transform: 'scale(1.2)',
+                        }}
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Content Section - Below Image */}
+                  <div>
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <h3 style={{ 
+                        fontSize: '20px', 
+                        margin: 0,
+                        lineHeight: 1.2,
+                        fontWeight: 300,
+                        letterSpacing: '-0.01em',
+                        marginBottom: '0.5rem'
+                      }}>
+                        {member.name}
+                      </h3>
+                      <p style={{ 
+                        fontSize: '14px',
+                        margin: 0, 
+                        color: '#666',
+                        letterSpacing: '0.01em',
+                        textTransform: 'uppercase',
+                        fontWeight: 500
+                      }}>
+                        {member.title}
+                      </p>
+                    </div>
+
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <p style={{ 
+                        fontSize: '15px',
+                        margin: 0, 
+                        lineHeight: 1.6,
+                        color: '#444',
+                        fontWeight: 300
+                      }}>
+                        {expandedBios.has(index) ? member.bio : truncateBio(member.bio)}
+                        {member.bio.length > 100 && (
+                          <button
+                            onClick={() => toggleBio(index)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#0066cc',
+                              cursor: 'pointer',
+                              fontSize: '15px',
+                              padding: 0,
+                              marginLeft: '0.5rem',
+                              fontWeight: 500
+                            }}
+                          >
+                            {expandedBios.has(index) ? 'Show less' : 'Read more'}
+                          </button>
+                        )}
+                      </p>
+                    </div>
+
+                    <div style={{ 
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '0.5rem',
+                      marginBottom: '1.5rem'
+                    }}>
+                      {member.interests.map((interest, idx) => (
+                        <span
+                          key={idx}
+                          style={{
+                            fontSize: '11px',
+                            background: '#f8f8f8',
+                            border: '1px solid #e5e5e5',
+                            borderRadius: '6px',
+                            padding: '0.3rem 0.6rem',
+                            color: '#666',
+                            letterSpacing: '0.01em'
+                          }}
+                        >
+                          {interest}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div style={{ 
+                      display: 'flex',
+                      gap: '0.75rem',
+                      flexWrap: 'wrap'
+                    }}>
+                      {member.email && (
+                        <a
+                          href={`mailto:${member.email}`}
+                          className="team-link"
+                          style={{
+                            fontSize: '11px',
+                            color: '#000',
+                            textDecoration: 'none',
+                            border: '1px solid #000',
+                            borderRadius: '6px',
+                            padding: '0.4rem 0.8rem',
+                            transition: 'all 0.2s ease',
+                            letterSpacing: '0.02em',
+                            textTransform: 'uppercase'
+                          }}
+                        >
+                          Email
+                        </a>
+                      )}
+                      
+                      {member.website && (
+                        <a
+                          href={member.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="team-link"
+                          style={{
+                            fontSize: '11px',
+                            color: '#000',
+                            textDecoration: 'none',
+                            border: '1px solid #000',
+                            borderRadius: '6px',
+                            padding: '0.4rem 0.8rem',
+                            transition: 'all 0.2s ease',
+                            letterSpacing: '0.02em',
+                            textTransform: 'uppercase'
+                          }}
+                        >
+                          Website
+                        </a>
+                      )}
+                      
+                      {member.twitter && (
+                        <a
+                          href={`https://twitter.com/${member.twitter.replace('@', '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="team-link"
+                          style={{
+                            fontSize: '11px',
+                            color: '#000',
+                            textDecoration: 'none',
+                            border: '1px solid #000',
+                            borderRadius: '6px',
+                            padding: '0.4rem 0.8rem',
+                            transition: 'all 0.2s ease',
+                            letterSpacing: '0.02em',
+                            textTransform: 'uppercase'
+                          }}
+                        >
+                          Twitter
+                        </a>
+                      )}
+                    </div>
                   </div>
-                )}
-                
-                {/* Content Section */}
-                <div style={{ flex: 1 }}>
+                </div>
+              ) : (
+                /* Desktop Layout */
+                <div style={{ display: 'flex', gap: '2rem', padding: '2.5rem' }}>
+                  {/* Image Section */}
+                  {member.image && (
+                    <div style={{
+                      width: '120px',
+                      height: '120px',
+                      background: '#f0f0f0',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      flexShrink: 0,
+                      borderRadius: '8px'
+                    }}>
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        style={{
+                          objectFit: 'cover',
+                          transition: 'transform 0.3s ease, filter 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'scale(1.05)';
+                          e.currentTarget.style.filter = 'brightness(1.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                          e.currentTarget.style.filter = 'brightness(1)';
+                        }}
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Content Section */}
+                  <div style={{ flex: 1 }}>
                 <div style={{ marginBottom: '1.5rem' }}>
                   <h3 style={{ 
                     fontSize: '22px', 
@@ -403,6 +609,7 @@ export default function Team() {
                 </div>
                 </div>
               </div>
+              )}
             </div>
           ))}
         </div>

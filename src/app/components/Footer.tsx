@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export default function Footer() {
   return (
-    <footer style={{
+    <footer data-dark-section style={{
       background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)',
       color: '#fff',
       padding: 'clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem)',
