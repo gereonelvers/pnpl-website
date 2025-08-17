@@ -183,7 +183,7 @@ export default function BlogPageClient({ posts, tags }: BlogPageProps) {
                             return post.date;
                           }
                           return format(date, 'MMM dd, yyyy');
-                        } catch (error) {
+                        } catch {
                           return post.date;
                         }
                       })()}</span>

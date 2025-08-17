@@ -41,7 +41,7 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
       if (footer && article) {
         const footerTop = footer.offsetTop;
         const articleRect = article.getBoundingClientRect();
-        const articleBottom = window.scrollY + articleRect.bottom;
+        // const articleBottom = window.scrollY + articleRect.bottom;
         const tocHeight = 400; // Approximate TOC height
         const buffer = 100; // Buffer space
         

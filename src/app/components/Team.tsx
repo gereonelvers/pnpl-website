@@ -129,7 +129,7 @@ export default function Team() {
         let leftHeight = 0;
         let rightHeight = 0;
         
-        items.forEach((item, index) => {
+        items.forEach((item) => {
           item.style.position = 'absolute';
           item.style.width = `${itemWidth}px`;
           

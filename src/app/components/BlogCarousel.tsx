@@ -13,10 +13,6 @@ export default function BlogCarousel({ posts }: BlogCarouselProps) {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
 
-  if (posts.length === 0) {
-    return null;
-  }
-
   const postsPerSlide = 1; // Scroll one post at a time
   const totalSlides = posts.length;
   const currentSlideIndex = currentIndex % totalSlides;
@@ -62,13 +58,9 @@ export default function BlogCarousel({ posts }: BlogCarouselProps) {
     setProgress(0);
   };
 
-  // Get posts for current slide
-  const getCurrentSlidePosts = () => {
-    const startIndex = currentSlideIndex * postsPerSlide;
-    return posts.slice(startIndex, startIndex + postsPerSlide);
-  };
-
-  const currentSlidePosts = getCurrentSlidePosts();
+  if (posts.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-24 bg-gradient-to-b from-gray-50 to-white">

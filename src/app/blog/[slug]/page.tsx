@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { format } from 'date-fns';
 import { getPostBySlug } from '@/lib/blog';
 import Navigation from '../../components/Navigation';
@@ -107,7 +106,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                       return post.date; // fallback to original string
                     }
                     return format(date, 'MMMM dd, yyyy');
-                  } catch (error) {
+                  } catch {
                     return post.date; // fallback to original string
                   }
                 })()}</span>
