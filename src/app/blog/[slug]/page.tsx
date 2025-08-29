@@ -1,13 +1,20 @@
 import { format } from 'date-fns';
-import { getPostBySlug } from '@/lib/blog';
+import { getPostBySlug, getAllPosts } from '@/lib/blog';
 import Navigation from '../../components/Navigation';
 import Citations from '../../components/Citations';
 import BlogPostCitation from '../../components/BlogPostCitation';
-import BlogDemo from '../../components/BlogDemo';
 import TableOfContents from '../../components/TableOfContents';
 import MathRenderer from '../../components/MathRenderer';
 import Footer from '../../components/Footer';
 import { notFound } from 'next/navigation';
+
+export const dynamic = 'error';
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  return posts.map((post) => ({ slug: post.slug }));
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -155,16 +162,7 @@ export default async function BlogPostPage({ params }: PageProps) {
               }}
               className="blog-content"
             >
-              {post.content.includes('data-component="BlogDemo"') ? (
-                <div>
-                  <div dangerouslySetInnerHTML={{ 
-                    __html: post.content.replace('<div data-component="BlogDemo"></div>', '<div id="blog-demo-placeholder"></div>') 
-                  }} />
-                  <BlogDemo />
-                </div>
-              ) : (
-                <div dangerouslySetInnerHTML={{ __html: post.content }} />
-              )}
+              <div dangerouslySetInnerHTML={{ __html: post.content }} />
             </div>
           </MathRenderer>
 

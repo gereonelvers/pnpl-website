@@ -75,16 +75,23 @@ const teamMembers: TeamMember[] = [
   {
     name: "John Kwon",
     title: "DPhil/PhD Student",
-    bio: "To be added",
-    interests: ["TODO"],
+    bio: "John is a DPhil student as part of the EPSRC Centre for Doctoral Training in Autonomous Intelligent Machines and Systems. He joined Michaelmas Term 2024.",
+    interests: ["LLMs", "Scaling laws"],
     image: "/team/john.jpeg"
+  },
+  {
+    name: "SungJun Cho",
+    title: "DPhil/PhD Student",
+    bio: "SungJun is a Neuroscience DPhil student, co-supervised with Mark Woolrich at OHBA/OxCIN/Psychiatry. He joined Michaelmas Term 2024.",
+    interests: ["Probabilistic dynamic models/DyNeMo/DyNeSte", "Foundation models", "Tokenisation"],
+    image: "/team/sungjun.jpg"
   },
   {
     name: "Gereon Elvers",
     title: "Visiting Master's Student",
     bio: "Gereon is a Master's student from TU Munich. After initially joining PNPL remotely, he is currently visiting the lab in-person for six months. Besides working on the LibriBrain competition, he is working on the first practical applications of non-invasive speech decoding.",
-    interests: ["TODO"],
-    image: "/team/gereon.png"
+    interests: ["Word Detection", "PNPL Competition"],
+    image: "/team/gereon.jpeg"
   }
 ];
 
@@ -92,6 +99,7 @@ export default function Team() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [expandedBios, setExpandedBios] = useState<Set<number>>(new Set());
   const [isMobile, setIsMobile] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   
   useEffect(() => {
     const checkMobile = () => {
@@ -116,6 +124,17 @@ export default function Team() {
   const truncateBio = (bio: string, maxLength: number = 100) => {
     if (bio.length <= maxLength) return bio;
     return bio.substring(0, maxLength).trim() + '...';
+  };
+
+  const getSunglassesImage = (imagePath?: string): string | null => {
+    if (!imagePath) return null;
+    const lastSlashIndex = imagePath.lastIndexOf('/')
+    const directory = lastSlashIndex !== -1 ? imagePath.substring(0, lastSlashIndex) : ''
+    const filename = lastSlashIndex !== -1 ? imagePath.substring(lastSlashIndex + 1) : imagePath
+    const dotIndex = filename.lastIndexOf('.')
+    const base = dotIndex !== -1 ? filename.substring(0, dotIndex) : filename
+    const sunglasses = `${directory}/${base}-sunglasses.jpeg`
+    return sunglasses
   };
 
   useEffect(() => {
@@ -240,6 +259,8 @@ export default function Team() {
                   boxShadow: '0 12px 48px rgba(0, 0, 0, 0.15)',
                 })
               }}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
               {member.featured && (
                 <div style={{
@@ -440,32 +461,47 @@ export default function Team() {
                 <div style={{ display: 'flex', gap: '2rem', padding: '2.5rem' }}>
                   {/* Image Section */}
                   {member.image && (
-                    <div style={{
-                      width: '120px',
-                      height: '120px',
-                      background: '#f0f0f0',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      flexShrink: 0,
-                      borderRadius: '8px'
-                    }}>
+                    <div
+                      style={{
+                        width: '120px',
+                        height: '120px',
+                        background: '#f0f0f0',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        flexShrink: 0,
+                        borderRadius: '8px'
+                      }}
+                      onMouseEnter={(e) => {
+                        ;(e.currentTarget as HTMLElement).style.transform = 'scale(1.05)'
+                        ;(e.currentTarget as HTMLElement).style.filter = 'brightness(1.1)'
+                      }}
+                      onMouseLeave={(e) => {
+                        ;(e.currentTarget as HTMLElement).style.transform = 'scale(1)'
+                        ;(e.currentTarget as HTMLElement).style.filter = 'brightness(1)'
+                      }}
+                    >
                       <Image
                         src={member.image}
                         alt={member.name}
                         fill
                         style={{
                           objectFit: 'cover',
-                          transition: 'transform 0.3s ease, filter 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.05)';
-                          e.currentTarget.style.filter = 'brightness(1.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'scale(1)';
-                          e.currentTarget.style.filter = 'brightness(1)';
+                          transition: 'opacity 0.25s ease-in-out'
                         }}
                       />
+                      {getSunglassesImage(member.image) && (
+                        <Image
+                          src={getSunglassesImage(member.image)!}
+                          alt={`${member.name} wearing sunglasses`}
+                          fill
+                          style={{
+                            objectFit: 'cover',
+                            opacity: hoveredIndex === index ? 1 : 0,
+                            transition: 'opacity 0.25s ease-in-out',
+                            willChange: 'opacity'
+                          }}
+                        />
+                      )}
                     </div>
                   )}
                   

@@ -237,6 +237,23 @@ export default function Footer() {
           }}>
             aloha 🌺 from Oxford!
           </p>
+          <p style={{ 
+            fontSize: 'clamp(10px, 2vw, 12px)', 
+            opacity: 0.4,
+            margin: 0,
+            letterSpacing: '0.02em'
+          }}>
+            Pineapple by Nevenaut, from Fab, licensed 
+            <a 
+              href="https://creativecommons.org/licenses/by/4.0/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{ color: 'inherit', textDecoration: 'underline', opacity: 0.7, marginLeft: '0.25em' }}
+            >
+              CC BY 4.0
+            </a>
+            , adapted with minor edits
+          </p>
         </div>
       </div>
     </footer>

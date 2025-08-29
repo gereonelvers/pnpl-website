@@ -286,12 +286,6 @@ Developing interpretable models that provide insights into neural mechanisms:
 - **Temporal dynamics** analysis revealing the timeline of speech processing
 - **Individual differences** characterization for personalized interventions
 
-## Interactive Demo
-
-Try our simplified inner speech classifier below. This demo uses synthetic data but demonstrates the core principles:
-
-<BlogDemo />
-
 ## Code Repository
 
 All code and data from this research are available in our GitHub repository:

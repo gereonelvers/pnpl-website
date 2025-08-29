@@ -1,10 +1,14 @@
 'use client';
 
 import React, { useMemo, useRef, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, useGLTF, AsciiRenderer } from '@react-three/drei';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { Environment, AsciiRenderer } from '@react-three/drei';
 import * as THREE from 'three';
 import Image from 'next/image';
+import { GLTFLoader, OBJLoader, GLTF } from 'three-stdlib';
+
+// Resolve base path for GitHub Pages (or any subpath hosting)
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 type HeroAscii3DProps = {
   modelUrl?: string;
@@ -18,29 +22,33 @@ type HeroAscii3DProps = {
 };
 
 function LoadedModel({ url, fit = 2.8, onLoad }: { url: string; fit?: number; onLoad?: () => void }) {
-  const { scene } = useGLTF(url);
-  
+  const isObj = url.toLowerCase().endsWith('.obj');
+  const loaderClass = (isObj ? OBJLoader : GLTFLoader) as unknown as new () => THREE.Loader;
+  const loadedUnknown = useLoader(loaderClass, url) as unknown;
+  const rootObject: THREE.Object3D = isObj
+    ? (loadedUnknown as THREE.Group)
+    : ((loadedUnknown as GLTF).scene as THREE.Object3D);
+
   React.useEffect(() => {
-    if (scene && onLoad) {
-      // Small delay to ensure the model is fully processed
+    if (rootObject && onLoad) {
       const timer = setTimeout(() => {
         onLoad();
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [scene, onLoad]);
+  }, [rootObject, onLoad]);
 
   const boxed = useMemo(() => {
-    const clone = scene.clone(true);
+    const clone = rootObject.clone(true);
     const box = new THREE.Box3().setFromObject(clone);
     const size = new THREE.Vector3();
     box.getSize(size);
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    const scale = fit / maxDim; // <— key change: fit controls overall size
+    const scale = fit / maxDim;
     const center = new THREE.Vector3();
     box.getCenter(center);
     return { scale, center };
-  }, [scene, fit]);
+  }, [rootObject, fit]);
 
   return (
     <group
@@ -52,7 +60,7 @@ function LoadedModel({ url, fit = 2.8, onLoad }: { url: string; fit?: number; on
       ]}
       dispose={null}
     >
-      <primitive object={scene} />
+      <primitive object={rootObject} />
     </group>
   );
 }
@@ -99,6 +107,10 @@ export default function HeroAscii3D({
 }: HeroAscii3DProps) {
   const [isModelLoaded, setIsModelLoaded] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
+  const resolvedModelUrl = React.useMemo(() => {
+    const normalized = modelUrl.startsWith('/') ? modelUrl : `/${modelUrl}`;
+    return `${BASE_PATH}${normalized}`;
+  }, [modelUrl]);
   
   React.useEffect(() => {
     const checkMobile = () => {
@@ -176,7 +188,7 @@ export default function HeroAscii3D({
 
             <SpinningRig rotationRPM={rotationRPM} tilt={tilt}>
               <Suspense fallback={<FallbackMesh />}>
-                <LoadedModel url={modelUrl} fit={fit} onLoad={() => setIsModelLoaded(true)} />
+                <LoadedModel url={resolvedModelUrl} fit={fit} onLoad={() => setIsModelLoaded(true)} />
               </Suspense>
             </SpinningRig>
 
@@ -336,7 +348,13 @@ export default function HeroAscii3D({
   );
 }
 
-// Only preload model on desktop
+// Only preload common models on desktop
 if (typeof window !== 'undefined' && window.innerWidth > 768) {
-  useGLTF.preload('/model.glb');
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  try {
+    useLoader.preload(GLTFLoader, `${basePath}/model.glb`);
+  } catch {}
+  try {
+    useLoader.preload(OBJLoader, `${basePath}/pineapple.obj`);
+  } catch {}
 }

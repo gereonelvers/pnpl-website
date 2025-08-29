@@ -20,13 +20,13 @@ export default async function Page() {
       <main style={{ color: '#0a0a0a', background: '#fff' }}>
         <section id="hero">
           <HeroAscii3D
-            modelUrl="/model.glb"
+            modelUrl="/pineapple.obj"
             rotationRPM={0.8}
             tilt={[25, 10, -8]}
             //characters={' .,:;pnl@'}
             characters={' .:-=+*#%@pnl'}
-            fontSize={9}
-            fit={3.5}
+            fontSize={10}
+            fit={4}
           />
         </section>
 

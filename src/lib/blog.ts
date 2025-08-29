@@ -143,8 +143,16 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     htmlContent = htmlContent.replace(/\$\$([^$]+)\$\$/g, '<div class="math-display">\\[$1\\]</div>');
     htmlContent = htmlContent.replace(/\$([^$]+)\$/g, '<span class="math-inline">\\($1\\)</span>');
     
-    // Replace React component placeholders with proper JSX
-    htmlContent = htmlContent.replace(/<BlogDemo \/>/g, '<div data-component="BlogDemo"></div>');
+    // Prefix absolute URLs with base path for GitHub Pages (only if configured)
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+    if (basePath) {
+      htmlContent = htmlContent
+        .replace(/(href|src)=(["'])\/(?!\/)([^"']*)/g, (_m, attr, quote, rest) => {
+          return `${attr}=${quote}${basePath}/${rest}`;
+        });
+    }
+    
+    // No embedded React components are supported in Markdown HTML output.
     
     // Calculate reading time (approximately 200 words per minute)
     const wordCount = content.split(/\s+/).length;
